@@ -3,7 +3,8 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLList
 } = graphql;
 const axios = require('axios');
 
@@ -20,6 +21,13 @@ const ProductType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
+    products: {
+      type: new GraphQLList(ProductType),
+      resolve(parentValue, args){
+        return axios.get(`http://localhost:3000/products`)
+          .then(res => res.data);
+      }
+    },
     product: {
       type: ProductType,
       args: {id: {type: GraphQLString} },
